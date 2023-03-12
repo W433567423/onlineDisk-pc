@@ -1,6 +1,0 @@
-node_modules
-
-.eslintignore
-.eslintrc.js
-commitlint.config.js
-vue.config.js
