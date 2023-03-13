@@ -13,7 +13,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  extends: ["eslint:recommended", "plugin:prettier/recommended", "plugin:vue/vue3-essential", "plugin:@typescript-eslint/recommended"],
+  extends: ["eslint:recommended", "plugin:prettier/recommended", "plugin:vue/vue3-recommend", "plugin:@typescript-eslint/recommended"],
   rules: {
     "vue/multi-word-component-names": "off",
     semi: [2],
