@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import index from './pages/index.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+import index from './pages/index.vue'
 const routes = [
   {
     path: '/',
@@ -21,10 +21,10 @@ const routes = [
     },
     component: () => import('./pages/login.vue'),
   },
-];
+]
 const router = createRouter({
   history: createWebHistory(),
   routes,
-});
+})
 
-export default router;
+export default router
