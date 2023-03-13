@@ -1,21 +1,21 @@
-/**
- * eslint配置
- */
 module.exports = {
-  root: true,
   env: {
     browser: true,
-    node: true,
-    es6: true,
+    es2021: true,
   },
-  parser: "vue-eslint-parser",
+  extends: ['eslint:recommended', 'plugin:vue/vue3-essential', 'plugin:@typescript-eslint/recommended'],
+  overrides: [],
+  parser: 'vue-eslint-parser',
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    parser: '@typescript-eslint/parser',
   },
-  extends: ["eslint:recommended", "plugin:prettier/recommended", "plugin:vue/vue3-recommend", "plugin:@typescript-eslint/recommended"],
+  plugins: ['vue', '@typescript-eslint'],
   rules: {
-    "vue/multi-word-component-names": "off",
+    '@typescript-eslint/no-explicit-any': 'off',
+    'vue/multi-word-component-names': 'off',
     semi: [2],
+    singleQuote: [0],
   },
-};
+}
