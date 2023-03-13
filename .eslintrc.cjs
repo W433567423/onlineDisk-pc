@@ -15,7 +15,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
     'vue/multi-word-component-names': 'off',
-    semi: [2],
+    semi: [0],
     singleQuote: [0],
   },
 }
