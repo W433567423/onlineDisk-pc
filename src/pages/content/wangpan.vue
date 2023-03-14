@@ -26,8 +26,9 @@
             <Icon type="md-folder" size="30" color="#ffa609" class="me-2" />
             我的笔记
             <div class="ms-auto text-primary">
-              <Tooltip content="bbbbb"></Tooltip>
-              <Icon type="md-share" size="20" class="mx-2" />
+              <Tooltip content="分享" placement="top">
+                <Icon type="md-share" size="20" class="mx-2" />
+              </Tooltip>
               <Icon type="md-cloud-download" size="20" class="mx-2" />
               <Icon type="md-more" size="20" class="mx-2" />
             </div>
