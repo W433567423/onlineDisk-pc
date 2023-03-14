@@ -1,9 +1,9 @@
-import { createApp } from 'vue';
-import './style.css';
-import App from './App.vue';
-import router from './router';
-import 'jquery';
-import 'bootstrap/dist/js/bootstrap.min.js';
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+import router from './router'
+import 'jquery'
+import 'bootstrap/dist/js/bootstrap.min.js'
 // import './assets/css/bootstrap.css';
 
 import {
@@ -26,9 +26,12 @@ import {
   DropdownMenu,
   DropdownItem,
   Avatar,
-} from 'view-ui-plus';
+  Progress,
+  Button,
+  Input,
+} from 'view-ui-plus'
 
-const app = createApp(App);
+const app = createApp(App)
 const components = [
   Icon,
   Login,
@@ -49,9 +52,12 @@ const components = [
   DropdownItem,
   Avatar,
   DropdownMenu,
-];
+  Progress,
+  Button,
+  Input,
+]
 for (const cpn of components) {
-  app.component(cpn.name, cpn);
+  app.component(cpn.name, cpn)
 }
-app.use(router);
-app.mount('#app');
+app.use(router)
+app.mount('#app')

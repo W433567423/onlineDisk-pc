@@ -1,17 +1,19 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import index from './pages/index.vue'
-const routes = [
+
+const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/index',
-  },
-  {
-    path: '/index',
     name: 'index',
-    meta: {
-      title: '首页',
-    },
     component: index,
+    redirect: { name: 'wangpan' },
+    children: [
+      {
+        path: '/wangpan',
+        name: 'wangpan',
+        component: () => import('./pages/content/wangpan.vue'),
+      },
+    ],
   },
   {
     path: '/login',
