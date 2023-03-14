@@ -42,7 +42,7 @@
           </Menu>
           <!-- 底部布局 -->
           <div style="width: 200px; height: 55px; background-color: #ebf0f1; position: absolute; bottom: 0" class="px-3">
-            <Progress hide-info :percent="90" :stroke-color="['#108ee9', '#87d068']" stroke-width="10" class="border" />
+            <Progress hide-info :percent="90" :stroke-color="['#108ee9', '#87d068']" />
             <div class="d-flex justify-content-between mt-2">
               <span>总共100TB</span>
               <span class="text-warning">已用80TB</span>
@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 // 顶部导航
-const topMuneIndex = ref(3)
+const topMuneIndex = ref(1)
 const topMuneList = ref([
   { icon: 'md-cloud', name: 1, title: '网盘' },
   { icon: 'md-share', name: 2, title: '分享' },

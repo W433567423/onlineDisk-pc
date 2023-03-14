@@ -13,6 +13,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'wangpan',
         component: () => import('./pages/content/wangpan.vue'),
       },
+      {
+        path: '/test',
+        name: 'test',
+        component: () => import('./pages/content/test.vue'),
+      },
     ],
   },
   {
