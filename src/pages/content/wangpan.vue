@@ -19,26 +19,7 @@
     </div>
     <!-- 列表部分 -->
     <div style="position: absolute; top: 90px; left: 0; right: 0; bottom: 55px; overflow-y: auto">
-      <div class="border-bottom px-3 py-2">
-        <Row>
-          <iCol span="14" class="d-flex align-items-center">
-            <Checkbox class="mb-0 me-3" size="small" />
-            <Icon type="md-folder" size="30" color="#ffa609" class="me-2" />
-            我的笔记
-            <div class="ms-auto text-primary">
-              <Tooltip content="分享" placement="top">
-                <Icon type="md-share" size="20" class="mx-2" />
-              </Tooltip>
-              <Icon type="md-cloud-download" size="20" class="mx-2" />
-              <Icon type="md-more" size="20" class="mx-2" />
-            </div>
-          </iCol>
-          <iCol span="6">-</iCol>
-          <iCol span="4">
-            <span class="text-secondary">2023-3-14</span>
-          </iCol>
-        </Row>
-      </div>
+      <mediaList v-for="(item, index) in list" :key="index" :item="item" :index="index" />
     </div>
     <!-- 底部 -->
     <div style="position: absolute; bottom: 0px; left: 0; right: 0; height: 55px" class="d-flex align-items-center justify-content-center border-top">
@@ -48,11 +29,12 @@
 </template>
 
 <script setup lang="ts">
+import mediaList from '../../components/media-list.vue'
 import { ref } from 'vue'
 
 let list = ref([
   { type: 'image', name: '风景.jpg', data: '/static/logo.png', create_time: '2023-03-11 12:37', checked: false },
-  { type: 'dir', name: '我的笔记', data: '', create_time: '2023-03-11 12:37', checked: false },
+  { type: 'dir', name: '我的笔记', data: '', create_time: '2023-03-11 12:37', checked: true },
   { type: 'image', name: '风景.jpg', data: '/static/logo.png', create_time: '2023-03-11 12:37', checked: false },
   { type: 'video', name: '小视频.mp4', data: '/static/210710122716702150.mp4', create_time: '2023-03-11 12:37', checked: false },
   { type: 'text', name: '记事本.txt', data: '', create_time: '2023-03-11 12:37', checked: false },
@@ -60,7 +42,6 @@ let list = ref([
   { type: 'image', name: '风景.jpg', data: '/static/logo.png', create_time: '2023-03-11 12:37', checked: false },
   { type: 'none', name: '压缩包.zip', data: '', create_time: '2023-03-11 12:37', checked: false },
 ])
-const icons = ref([{ icon: 'md-folder' }])
 </script>
 
 <style scoped lang="less"></style>

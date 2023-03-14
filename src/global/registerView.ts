@@ -26,6 +26,7 @@ import {
   Row,
   Col,
   Tooltip,
+  Radio,
 } from 'view-ui-plus'
 //导入boootstrap
 import 'jquery'
@@ -57,6 +58,7 @@ const components = [
   Row,
   Col,
   Tooltip,
+  Radio,
 ]
 
 //全局注册常用组件
