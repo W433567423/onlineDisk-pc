@@ -3,6 +3,6 @@ export interface IEmitElement {
   method: string
   item?: IListItem
   index: number
-  value?: boolean
+  value?: boolean | string
   newName?: string
 }

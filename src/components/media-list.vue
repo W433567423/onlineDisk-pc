@@ -1,5 +1,5 @@
 <template>
-  <div class="border-bottom px-3 py-2 media-list">
+  <div class="border-bottom px-3 py-2 media-list" @click="handleShowListBg">
     <Row>
       <iCol span="14" class="d-flex align-items-center">
         <Checkbox
@@ -80,6 +80,11 @@ const isShowModalDel = ref(false)
 const isShowModalRename = ref(false)
 // 重命名
 const newName = ref(porps.item.name)
+
+//显示列表背景
+const handleShowListBg = () => {
+  emit('changeListItem', { method: 'image', value: porps.item.data })
+}
 </script>
 
 <style scoped lang="less">

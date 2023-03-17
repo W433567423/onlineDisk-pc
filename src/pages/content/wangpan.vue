@@ -37,6 +37,12 @@
       <Input placeholder="请输入新的文件名" autofocus v-model="newName"></Input>
     </Modal>
   </div>
+  <!-- 图片预览 -->
+  <Modal v-model="isShowModalImg" fullscreen footer-hide mask @click="isShowModalImg = false">
+    <div style="width: 60%; margin: 10% auto">
+      <img :src="showImgUrl" />
+    </div>
+  </Modal>
 </template>
 
 <script setup lang="ts">
@@ -44,15 +50,38 @@ import mediaList from '../../components/media-list.vue'
 import { ref, computed } from 'vue'
 import { IEmitElement } from './type'
 // import { Message } from 'view-ui-plus'
-
 let list = ref([
-  { type: 'image', name: '风景.jpg', data: '/static/logo.png', create_time: '2023-03-11 12:37', checked: false },
+  {
+    type: 'image',
+    name: '风景.jpg',
+    data: 'https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/datapic/1.jpg',
+    create_time: '2023-03-11 12:37',
+    checked: false,
+  },
   { type: 'dir', name: '我的笔记', data: '', create_time: '2023-03-11 12:37', checked: true },
-  { type: 'image', name: '风景.jpg', data: '/static/logo.png', create_time: '2023-03-11 12:37', checked: false },
+  {
+    type: 'image',
+    name: '风景.jpg',
+    data: 'https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/datapic/2.jpg',
+    create_time: '2023-03-11 12:37',
+    checked: false,
+  },
   { type: 'video', name: '小视频.mp4', data: '/static/210710122716702150.mp4', create_time: '2023-03-11 12:37', checked: false },
   { type: 'text', name: '记事本.txt', data: '', create_time: '2023-03-11 12:37', checked: false },
-  { type: 'image', name: '风景.jpg', data: '/static/logo.png', create_time: '2023-03-11 12:37', checked: false },
-  { type: 'image', name: '风景.jpg', data: '/static/logo.png', create_time: '2023-03-11 12:37', checked: false },
+  {
+    type: 'image',
+    name: '风景.jpg',
+    data: 'https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/datapic/3.jpg',
+    create_time: '2023-03-11 12:37',
+    checked: false,
+  },
+  {
+    type: 'image',
+    name: '风景.jpg',
+    data: 'https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/datapic/4.jpg',
+    create_time: '2023-03-11 12:37',
+    checked: false,
+  },
   { type: 'none', name: '压缩包.zip', data: '', create_time: '2023-03-11 12:37', checked: false },
 ])
 // 子组件删除事件
@@ -72,6 +101,13 @@ const handleChangeItem = (e: IEmitElement) => {
     case 'rename':
       list.value[e.index as number].name = e.newName as string
       break
+    case 'image':
+      if (typeof e.value == 'string' && e.value.length > 0) {
+        isShowModalImg.value = true
+        showImgUrl.value = e.value as string
+      }
+
+      break
     default:
       break
   }
@@ -85,6 +121,11 @@ const handleSelectAll = (e: boolean) => list.value.forEach((item) => (item.check
 // 重命名
 const isShowModalRename = ref(false)
 const newName = checkedList.value[0].name
+
+//图片
+// const ViewImgRef = ref(null)
+const isShowModalImg = ref(false)
+const showImgUrl = ref('')
 </script>
 
 <style scoped lang="less"></style>
