@@ -1,11 +1,8 @@
-import { App } from 'vue'
+import { App } from 'vue';
 import {
   Icon,
-  Login,
-  UserName,
-  Password,
-  Submit,
-  Checkbox,
+  Form,
+  FormItem,
   Layout,
   Header,
   Sider,
@@ -28,18 +25,15 @@ import {
   Tooltip,
   Radio,
   Modal,
-  Message,
-} from 'view-ui-plus'
+  Checkbox,
+} from 'view-ui-plus';
 //导入boootstrap
-import 'jquery'
-import 'bootstrap/dist/js/bootstrap.min.js'
+import 'jquery';
+import 'bootstrap/dist/js/bootstrap.min.js';
 const components = [
   Icon,
-  Login,
-  UserName,
-  Password,
-  Submit,
-  Checkbox,
+  Form,
+  FormItem,
   Layout,
   Header,
   Sider,
@@ -62,12 +56,12 @@ const components = [
   Tooltip,
   Radio,
   Modal,
-  Message,
-]
+  Checkbox,
+];
 
 //全局注册常用组件
 export default function registerApp(app: App): void {
   for (const cpn of components) {
-    app.component(cpn.name, cpn)
+    app.component(cpn.name, cpn);
   }
 }

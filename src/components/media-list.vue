@@ -1,5 +1,5 @@
 <template>
-  <div class="border-bottom px-3 py-2 media-list" @click="handleShowListBg">
+  <div class="border-bottom px-3 py-2 media-list">
     <Row>
       <iCol span="14" class="d-flex align-items-center">
         <Checkbox
@@ -9,7 +9,7 @@
           @on-change="emit('changeListItem', { method: 'check', item: porps.item, index: porps.index, value: !item.checked })"
         />
         <Icon :type="iconType" size="40" :class="iconColor" class="me-2" />
-        {{ item.name }}
+        <span @click="handleClickImage">{{ item.name }}</span>
         <div class="ms-auto text-primary hide">
           <Tooltip content="分享">
             <Icon type="md-share" size="20" class="mx-2" style="cursor: pointer" />
@@ -56,13 +56,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { IListItem } from '../pages/type'
-import { Modal } from 'view-ui-plus'
+import { ref, computed } from 'vue';
+import { IListItem } from '../pages/type';
+import { Modal } from 'view-ui-plus';
 const porps = defineProps<{
-  item: IListItem
-  index: number
-}>()
+  item: IListItem;
+  index: number;
+}>();
 // 处理图标相关
 const icons: { [key: string]: any } = {
   dir: { icon: 'md-folder', color: 'text-warning' },
@@ -70,21 +70,21 @@ const icons: { [key: string]: any } = {
   video: { icon: 'md-film', color: 'text-primary' },
   text: { icon: 'md-paper', color: 'text-info' },
   none: { icon: 'md-document', color: 'text-muted' },
-}
-const iconType = computed(() => icons[porps.item.type].icon)
-const iconColor = computed(() => icons[porps.item.type].color)
+};
+const iconType = computed(() => icons[porps.item.type].icon);
+const iconColor = computed(() => icons[porps.item.type].color);
 // 处理操作
 // 删除
-const emit = defineEmits(['changeListItem'])
-const isShowModalDel = ref(false)
-const isShowModalRename = ref(false)
+const emit = defineEmits(['changeListItem']);
+const isShowModalDel = ref(false);
+const isShowModalRename = ref(false);
 // 重命名
-const newName = ref(porps.item.name)
+const newName = ref(porps.item.name);
 
 //显示列表背景
-const handleShowListBg = () => {
-  emit('changeListItem', { method: 'image', value: porps.item.data })
-}
+const handleClickImage = () => {
+  emit('changeListItem', { method: 'image', value: porps.item.data });
+};
 </script>
 
 <style scoped lang="less">

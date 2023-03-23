@@ -2,8 +2,14 @@
   <div class="index">
     <Layout style="height: 100vh">
       <!-- 顶部布局 -->
-      <Header class="bg-white p-0" style="height: 60px; line-height: 60px">
-        <Menu mode="horizontal" theme="light" :active-name="topMuneIndex" @on-select="handleTopMune" class="d-flex align-items-center justify-content-start ps-4">
+      <Header class="bg-white p-0" style="height: 60px; line-height: 60px; z-index: 99">
+        <Menu
+          mode="horizontal"
+          theme="light"
+          :active-name="topMuneIndex"
+          @on-select="handleTopMune"
+          class="d-flex align-items-center justify-content-start ps-4"
+        >
           <!--  左侧导航部分-->
           <div style="width: 200px; font-size: 25px; font-weight: bold">tutuの网盘</div>
           <MenuItem :name="item.name" v-for="(item, index) in topMuneList" :key="index">
@@ -14,15 +20,15 @@
           <div class="ms-md-auto me-4">
             <Dropdown>
               <a href="javascript:void(0)">
-                <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
-                管理员
+                <Avatar :src="user.avatar || 'https://i.loli.net/2017/08/21/599a521472424.jpg'" />
+                {{ user.nickname || user.username }}
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <template #list>
                 <DropdownMenu>
                   <DropdownItem>个人资料</DropdownItem>
                   <DropdownItem>修改密码</DropdownItem>
-                  <DropdownItem>安全退出</DropdownItem>
+                  <DropdownItem @click="handleClickLogout">安全退出</DropdownItem>
                 </DropdownMenu>
               </template>
             </Dropdown>
@@ -59,21 +65,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-// 顶部导航
-const topMuneIndex = ref(1)
-const topMuneList = ref([
-  { icon: 'md-cloud', name: 1, title: '网盘' },
-  { icon: 'md-share', name: 2, title: '分享' },
-  { icon: 'md-keypad', name: 3, title: '更多' },
-])
-const handleTopMune = (e: any) => {
-  console.log(e)
-}
+import { ref, computed, ComputedRef } from 'vue';
+import { useStore } from 'vuex';
+import { Message } from 'view-ui-plus';
+import useCurrentInstancefrom from '../utils/useCurrentInstance';
 
-// 侧边导航
-const siderMuneIndex = ref(2)
-const siderMuneList = ref([
+import { IUser } from '../store/type';
+import router from '../router';
+
+const { proxy } = useCurrentInstancefrom();
+
+const store = useStore();
+
+const siderMuneList = [
   {
     category: '全部文件',
     list: [
@@ -90,10 +94,33 @@ const siderMuneList = ref([
       { icon: 'md-trash', name: 6, title: '回收站' },
     ],
   },
-])
+];
+const topMuneList = [
+  { icon: 'md-cloud', name: 1, title: '网盘' },
+  { icon: 'md-share', name: 2, title: '分享' },
+  { icon: 'md-keypad', name: 3, title: '更多' },
+];
+const topMuneIndex = ref(1);
+const siderMuneIndex = ref(2);
+
+const user: ComputedRef<IUser> = computed(() => store.state.userModule.user || {});
+
+// 处理顶部点击事件
+const handleTopMune = (e: any) => {
+  console.log(e);
+};
+
+// 处理侧边点击事件
 const handleSiderMune = (e: any) => {
-  console.log(e)
-}
+  console.log(e);
+};
+const handleClickLogout = () => {
+  proxy.$T.get('/user/logout');
+  Message.success('退出成功');
+  // 清除登录状态和本地存储
+  store.dispatch('usermodule/clearStatus');
+  router.push({ name: 'login' });
+};
 </script>
 
 <style lang="less">

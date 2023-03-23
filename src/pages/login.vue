@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <div class="d-flex justify-content-center" style="height: 100vh">
-      <div class="rounded p-3" style="width: 380px; margin-top: 50px; height: max-content; background-color: #e8eaec">
+      <div class="rounded p-3" style="width: 380px; margin-top: 25vh; height: max-content; background-color: #e8eaec">
         <!-- 上方装饰 -->
         <div class="d-flex flex-column align-items-center justify-content-center mb-4">
           <div class="d-flex align-items-center mb-3">
@@ -10,56 +10,113 @@
           </div>
           <span class="text-muted small">企业级网盘解决方案</span>
         </div>
-        <!-- 登录模块 -->
-        <Login @on-submit="handleSubmit">
-          <UserName v-model="formItem.username" name="username" :rules="usernameRule" :ref="usernameRef" />
-          <Password v-model="formItem.password" :rules="passwordRule" name="password" :ref="passwordRef" />
-          <div class="d-flex align-items-center mb-3">
-            <Checkbox v-model="formItem.isAutoLogin" size="large">自动登录</Checkbox>
-            <a href="#" class="small ms-auto">忘记密码</a>
-            <span class="mx-1">|</span>
-            <a href="#" class="small">立即注册</a>
+        <!-- 登录/注册模块 -->
+        <iForm ref="formRef" :label-width="0" :model="formItem" :rules="rules">
+          <FormItem prop="username">
+            <Input v-model="formItem.username" placeholder="请输入用户名..."></Input>
+          </FormItem>
+          <FormItem prop="password">
+            <Input v-model="formItem.password" placeholder="请输入密码..." type="password"></Input>
+          </FormItem>
+          <FormItem prop="repassword" v-if="status === 'reg'">
+            <Input v-model="formItem.repassword" placeholder="请输入确认密码..." type="password"></Input>
+          </FormItem>
+          <div class="d-flex align-items-center mb-2">
+            <a href="#" class="small ms-auto" @click="changeStatus">{{ status === 'login' ? '注册账户' : '登录账户' }}</a>
           </div>
-          <Submit />
-        </Login>
+          <FormItem>
+            <Button type="primary" long @click="handleSubmit">{{ status === 'login' ? '登 录' : '注 册' }}</Button>
+          </FormItem>
+        </iForm>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-const formItem = ref({ username: '', password: '', isAutoLogin: true });
+import { ref, Ref } from 'vue';
+import { useStore } from 'vuex';
+import { Message } from 'view-ui-plus';
+import { AxiosError } from 'axios';
+import useCurrentInstancefrom from '../utils/useCurrentInstance';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const store = useStore();
+const { proxy } = useCurrentInstancefrom();
+
+const formRef: Ref<any> = ref(null);
+const status = ref('login');
+const formItem = ref({ username: 'wtututu', password: '1234', repassword: '' });
+
 // 校验规则
-const usernameRule = ref([
-  {
-    required: true,
-    message: '用户名不能为空！',
-    trigger: 'blur',
-  },
-  {
-    min: 4,
-    message: '账号不能少于4位！',
-    trigger: 'blur',
-  },
-]);
-const passwordRule = ref([
-  {
-    required: true,
-    message: '密码不能为空！',
-    trigger: 'blur',
-  },
-  {
-    min: 6,
-    message: '密码不能少于6位！',
-    trigger: 'blur',
-  },
-]);
-const passwordRef = ref(null);
-const usernameRef = ref(null);
-const handleSubmit = (e: boolean) => {
-  if (!e) return;
-  console.log('提交');
+const rules = {
+  username: [
+    {
+      required: true,
+      message: '用户名不能为空！',
+      trigger: 'blur',
+    },
+    {
+      min: 4,
+      message: '账号不能少于4位！',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: '密码不能为空！',
+      trigger: 'blur',
+    },
+    {
+      min: 4,
+      message: '密码不能少于4位！',
+      trigger: 'blur',
+    },
+  ],
+  repassword: [
+    {
+      required: true,
+      message: '确认密码不能为空！',
+      trigger: 'blur',
+    },
+    {
+      min: 4,
+      message: '确认密码不能少于4位！',
+      trigger: 'blur',
+    },
+  ],
+};
+// 提交事件
+const handleSubmit = () => {
+  formRef.value.validate((valid: boolean) => {
+    if (!valid) return;
+    const text = status.value === 'reg' ? '注册成功,请先登录' : '登录成功';
+    proxy.$T
+      .post('/user/' + status.value, formItem.value)
+      .then((res: any) => {
+        if (res?.data?.msg === 'ok') {
+          if (status.value === 'login') {
+            store.dispatch('userModule/userLogin', res?.data?.data);
+            Message.success(text);
+            router.push({ name: 'index' });
+          } else {
+            Message.success(text);
+            status.value = 'login';
+          }
+        }
+      })
+      .catch((err: any | null) => {
+        if (err) Message.error(err?.response?.data?.data);
+      });
+  });
+};
+
+// 切换登录/注册
+const changeStatus = () => {
+  status.value = status.value === 'login' ? 'reg' : 'login';
+  console.log(status.value);
 };
 </script>
 

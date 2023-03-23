@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import index from './pages/index.vue'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import index from './pages/index.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -13,11 +13,6 @@ const routes: Array<RouteRecordRaw> = [
         name: 'wangpan',
         component: () => import('./pages/content/wangpan.vue'),
       },
-      {
-        path: '/test',
-        name: 'test',
-        component: () => import('./pages/content/test.vue'),
-      },
     ],
   },
   {
@@ -28,10 +23,10 @@ const routes: Array<RouteRecordRaw> = [
     },
     component: () => import('./pages/login.vue'),
   },
-]
+];
 const router = createRouter({
   history: createWebHistory(),
   routes,
-})
+});
 
-export default router
+export default router;
