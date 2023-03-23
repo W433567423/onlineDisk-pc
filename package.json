@@ -42,7 +42,7 @@
     "vue-tsc": "^1.0.24"
   },
   "lint-staged": {
-    "src/**/*.{jsx,ts,tsx,vue,less,sass,scss,css.json}": [
+    "./src/**/*.{js,jsx,ts,tsx,vue,less,sass,scss,css.json}": [
       "eslint --fix",
       "git add"
     ]

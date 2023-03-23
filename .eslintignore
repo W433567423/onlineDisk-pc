@@ -1,6 +1,6 @@
-# node_modules
+node_modules
 
-# .eslintignore
+.eslintignore
 .eslintrc.cjs
-# commitlint.config.js
-# vue.config.js
+commitlint.config.js
+vue.config.js
