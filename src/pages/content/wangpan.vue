@@ -3,7 +3,7 @@
     <!-- 顶部选项 -->
     <div class="border-bottom d-flex px-3 flex-column justify-content-center" style="position: absolute; top: 0; left: 0; right: 0; height: 90px">
       <div class="d-flex align-items-center">
-        <Button type="primary" icon="md-cloud-upload" class="me-2">上传</Button>
+        <Button type="primary" icon="md-cloud-upload" class="me-2" @click="upload">上传</Button>
         <Button icon="md-add" class="me-2" v-if="checkedCount == 0" @click="handleClickMkdir">新建文件夹</Button>
         <Button icon="md-cloud-download" class="me-2" v-if="checkedCount">下载</Button>
         <Button icon="md-share" class="me-2" v-if="checkedCount">分享</Button>
@@ -21,28 +21,59 @@
     <div style="position: absolute; top: 90px; left: 0; right: 0; bottom: 0px; overflow-y: auto">
       <mediaList v-for="(item, index) in list" :key="index" :item="item" :index="index" @changeListItem="handleChangeItem" />
     </div>
+    <!-- 上传文件 -->
+    <Modal
+      v-model="uploadModal"
+      title="上传文件"
+      fullscreen
+      footer-hide
+      @on-cancel="
+        () => {
+          FlashList();
+        }
+      "
+    >
+      <Upload
+        :headers="{
+          token,
+        }"
+        multiple
+        type="drag"
+        :action="'https://aod.wtututu.top/file/upload?file_id=' + file_id"
+      >
+        <div style="padding: 20px 0">
+          <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+          <p>单击或拖动文件上传</p>
+        </div>
+      </Upload>
+    </Modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, Ref } from 'vue';
 import { Message, Modal, Input } from 'view-ui-plus';
+import { api as viewApi } from 'v-viewer';
 import mediaList from '../../components/media-list.vue';
 import { getFileList, mkDir } from '../../service/file';
-import { api as viewApi } from 'v-viewer';
+import { useStore } from 'vuex';
 
 import { IEmitElement } from './type';
 import { IListItem } from '../type';
 import { IRawlistItem } from '../../store/type';
 
+const store = useStore();
+
 const list: Ref<Array<IListItem>> = ref([]);
+// 重命名
+const isShowModalRename = ref(false);
+const uploadModal = ref(false);
 const file_id = computed(() => 0);
+const token = computed(() => store.state.userModule.token);
 const checkedList = computed(() => list.value.filter((item) => item.checked));
 // const checkedIndex = computed(() => list.value.findIndex((item) => item.checked));
 const checkedCount = computed(() => checkedList.value.length);
 const isSelectAll = computed(() => checkedList.value.length == list.value.length);
-// 重命名
-const isShowModalRename = ref(false);
 
 // 获取数据并初始化
 const FlashList = () => {
@@ -95,6 +126,10 @@ const handleClickMkdir = () => {
   });
 };
 
+// 上传文件
+const upload = () => {
+  uploadModal.value = true;
+};
 // 子组件事件
 const handleChangeItem = (e: IEmitElement) => {
   switch (e.method) {

@@ -26,6 +26,7 @@ import {
   Radio,
   Modal,
   Checkbox,
+  Upload,
 } from 'view-ui-plus';
 //导入boootstrap
 import 'jquery';
@@ -57,6 +58,7 @@ const components = [
   Radio,
   Modal,
   Checkbox,
+  Upload,
 ];
 
 //全局注册常用组件
