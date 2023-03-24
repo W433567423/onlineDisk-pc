@@ -90,17 +90,22 @@ const rules = {
 const handleSubmit = () => {
   formRef.value.validate((valid: boolean) => {
     if (!valid) return;
-    if (status.value === 'login')
+    if (status.value === 'login') {
+      const msg = Message.loading({
+        content: 'Loading...',
+        duration: 0,
+      });
       login(formItem.value)
         .then((res) => {
           store.dispatch('userModule/userLogin', res?.data);
+          msg();
           Message.success('登录成功');
-          router.push({ path: '/wangpan' });
+          router.push({ path: '/index/wangpan' });
         })
         .catch((err) => {
           if (err.data) Message.error(err?.data);
         });
-    else {
+    } else {
       register(formItem.value).then(() => {
         Message.success('注册成功，请先登录');
         status.value = 'login';

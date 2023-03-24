@@ -49,7 +49,7 @@ const register = (params: Reg.RegReqForm) => {
 // 用户退出登录
 const logout = () => {
   // 返回的数据格式可以和服务端约定
-  return axios.get<Logout.LogoutResData>('/user/logout');
+  return axios.get<Logout.LogoutResData>('/user/logout', { token: true });
 };
 
 export { login, register, logout };

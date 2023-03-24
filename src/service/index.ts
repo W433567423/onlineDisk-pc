@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ElMessage } from 'element-plus';
+import { Message } from 'view-ui-plus';
+
 // 数据返回的接口
 // 定义请求响应参数，不含data
 interface Result {
-  code: number;
   msg: string;
 }
 
@@ -14,7 +14,6 @@ interface ResultData<T = any> extends Result {
 const URL = 'https://aod.wtututu.top';
 enum RequestEnums {
   TIMEOUT = 20000,
-  OVERDUE = 600, // 登录失效
   FAIL = 999, // 请求失败
   SUCCESS = 200, // 请求成功
 }
@@ -41,13 +40,16 @@ class RequestHttp {
      */
     this.service.interceptors.request.use(
       (config: any) => {
-        const token = localStorage.getItem('token') || '';
-        return {
-          ...config,
-          headers: {
-            token, // 请求头中携带token信息
-          },
-        };
+        if (config?.params?.token) {
+          const token = localStorage.getItem('token') || '';
+          return {
+            ...config,
+            headers: {
+              token, // 请求头中携带token信息
+            },
+          };
+        }
+        return config;
       },
       (error: AxiosError) => {
         // 请求报错
@@ -62,29 +64,27 @@ class RequestHttp {
     this.service.interceptors.response.use(
       (response: AxiosResponse) => {
         const { data } = response; // 解构
-        if (data.code === RequestEnums.OVERDUE) {
-          // 登录信息失效，应跳转到登录页面，并清空本地的token
-          localStorage.setItem('token', '');
-          // router.replace({
-          //   path: '/login'
-          // })
-          return Promise.reject(data);
-        }
-        // 全局错误信息拦截（防止下载文件得时候返回数据流，没有code，直接报错）
-        if (data.code && data.code !== RequestEnums.SUCCESS) {
-          ElMessage.error(data); // 此处也可以使用组件提示报错信息
-          return Promise.reject(data);
-        }
         return Promise.resolve(data);
       },
-      (error: AxiosError) => {
+      (error: any) => {
         const { response } = error;
         if (!window.navigator.onLine) {
-          ElMessage.error('网络连接失败');
+          Message.error('网络连接失败');
           // 可以跳转到错误页面，也可以不做操作
           // return router.replace({
           //   path: '/404'
           // });
+        }
+        if (response?.data?.data?.message) {
+          if (response?.data?.data?.message === 'token不合法') {
+            // 登录信息失效，应跳转到登录页面，并清空本地的token
+            Message.error('token不合法,1s后跳转至登录页');
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            setTimeout(() => location.replace('/login'), 1000);
+            return Promise.reject(response?.data);
+          }
+          Message.error(response?.data?.data?.message);
         }
         return Promise.reject(response?.data);
       }
