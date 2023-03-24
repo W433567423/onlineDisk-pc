@@ -25,7 +25,7 @@
             <a href="#" class="small ms-auto" @click="changeStatus">{{ status === 'login' ? '注册账户' : '登录账户' }}</a>
           </div>
           <FormItem>
-            <Button type="primary" long @click="handleSubmit">{{ status === 'login' ? '登 录' : '注 册' }}</Button>
+            <Button :loading="isLoading" type="primary" long @click="handleSubmit">{{ status === 'login' ? '登 录' : '注 册' }}</Button>
           </FormItem>
         </iForm>
       </div>
@@ -46,6 +46,7 @@ const store = useStore();
 const formRef: Ref<any> = ref(null);
 const status = ref('login');
 const formItem = ref({ username: 'wtututu', password: '1234', repassword: '' });
+const isLoading = ref(false);
 
 // 校验规则
 const rules = {
@@ -95,10 +96,12 @@ const handleSubmit = () => {
         content: 'Loading...',
         duration: 0,
       });
+      isLoading.value = true;
       login(formItem.value)
         .then((res) => {
           store.dispatch('userModule/userLogin', res?.data);
           msg();
+          isLoading.value = false;
           Message.success('登录成功');
           router.push({ path: '/index/wangpan' });
         })
