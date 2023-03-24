@@ -46,47 +46,54 @@
 </template>
 
 <script setup lang="ts">
-import mediaList from '../../components/media-list.vue';
-import { ref, computed } from 'vue';
-import { IEmitElement } from './type';
+import { ref, computed, Ref } from 'vue';
 import { Message } from 'view-ui-plus';
 
-let list = ref([
-  {
-    type: 'image',
-    name: '风景.jpg',
-    data: 'https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/datapic/1.jpg',
-    create_time: '2023-03-11 12:37',
-    checked: false,
-  },
-  { type: 'dir', name: '我的笔记', data: '', create_time: '2023-03-11 12:37', checked: true },
-  {
-    type: 'image',
-    name: '风景.jpg',
-    data: 'https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/datapic/2.jpg',
-    create_time: '2023-03-11 12:37',
-    checked: false,
-  },
-  { type: 'video', name: '小视频.mp4', data: '/static/210710122716702150.mp4', create_time: '2023-03-11 12:37', checked: false },
-  { type: 'text', name: '记事本.txt', data: '', create_time: '2023-03-11 12:37', checked: false },
-  {
-    type: 'image',
-    name: '风景.jpg',
-    data: 'https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/datapic/3.jpg',
-    create_time: '2023-03-11 12:37',
-    checked: false,
-  },
-  {
-    type: 'image',
-    name: '风景.jpg',
-    data: 'https://tangzhe123-com.oss-cn-shenzhen.aliyuncs.com/Appstatic/qsbk/demo/datapic/4.jpg',
-    create_time: '2023-03-11 12:37',
-    checked: false,
-  },
-  { type: 'none', name: '压缩包.zip', data: '', create_time: '2023-03-11 12:37', checked: false },
-]);
+import mediaList from '../../components/media-list.vue';
+import { getFileList } from '../../service/file';
 
-// 子组件删除事件
+import { IEmitElement } from './type';
+import { IListItem } from '../type';
+import { IRawlistItem } from '../../store/type';
+
+const list: Ref<Array<IListItem>> = ref([]);
+const checkedList = computed(() => list.value.filter((item) => item.checked));
+const checkedIndex = computed(() => list.value.findIndex((item) => item.checked));
+const checkedCount = computed(() => checkedList.value.length);
+const isSelectAll = computed(() => checkedList.value.length == list.value.length);
+
+// 重命名
+const isShowModalRename = ref(false);
+const newName = checkedList.value[0]?.name;
+// const newName = '';
+//图片
+// const ViewImgRef = ref(null)
+const isShowModalImg = ref(false);
+const showImgUrl = ref('');
+
+// 获取数据并初始化
+getFileList(0).then(({ data }) => (list.value = formatListDate(data?.rows as Array<IRawlistItem>)));
+// 格式化列表数据
+const formatListDate = (rawListDate: Array<IRawlistItem>): Array<IListItem> =>
+  rawListDate.map((item) => {
+    let type;
+    if (item.isdir === 1) {
+      type = 'dir';
+    } else {
+      type = item.ext.split('/')[0] || 'none';
+    }
+    return {
+      type,
+      checked: false,
+      name: item.name,
+      url: 'https://' + item.url,
+      created_time: item.created_time,
+      id: item.id,
+      size: item.size,
+    };
+  });
+
+// 子组件事件
 const handleChangeItem = (e: IEmitElement) => {
   switch (e.method) {
     case 'delete':
@@ -104,26 +111,13 @@ const handleChangeItem = (e: IEmitElement) => {
         isShowModalImg.value = true;
         showImgUrl.value = e.value as string;
       }
-
       break;
     default:
       break;
   }
 };
 //全选/选择
-const checkedList = computed(() => list.value.filter((item) => item.checked));
-const checkedIndex = computed(() => list.value.findIndex((item) => item.checked));
-const checkedCount = computed(() => checkedList.value.length);
-const isSelectAll = computed(() => checkedList.value.length == list.value.length);
 const handleSelectAll = (e: boolean) => list.value.forEach((item) => (item.checked = e));
-// 重命名
-const isShowModalRename = ref(false);
-const newName = checkedList.value[0].name;
-
-//图片
-// const ViewImgRef = ref(null)
-const isShowModalImg = ref(false);
-const showImgUrl = ref('');
 </script>
 
 <style scoped lang="less"></style>

@@ -63,7 +63,7 @@ class RequestHttp {
      */
     this.service.interceptors.response.use(
       (response: AxiosResponse) => {
-        const { data } = response; // 解构
+        const { data } = response;
         return Promise.resolve(data);
       },
       (error: any) => {

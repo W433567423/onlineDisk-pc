@@ -32,7 +32,7 @@
       </iCol>
       <iCol span="6" style="height: 40px; line-height: 40px">-</iCol>
       <iCol span="4">
-        <span class="text-secondary" style="height: 40px; line-height: 40px">{{ item.create_time }}</span>
+        <span class="text-secondary" style="height: 40px; line-height: 40px">{{ item.created_time }}</span>
       </iCol>
     </Row>
     <!-- 弹出对话框 -->
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { IListItem } from '../pages/type';
 import { Modal } from 'view-ui-plus';
 const porps = defineProps<{
@@ -71,8 +71,8 @@ const icons: { [key: string]: any } = {
   text: { icon: 'md-paper', color: 'text-info' },
   none: { icon: 'md-document', color: 'text-muted' },
 };
-const iconType = computed(() => icons[porps.item.type].icon);
-const iconColor = computed(() => icons[porps.item.type].color);
+const iconType = icons[porps?.item?.type]?.icon;
+const iconColor = icons[porps?.item?.type]?.color;
 // 处理操作
 // 删除
 const emit = defineEmits(['changeListItem']);
@@ -81,9 +81,9 @@ const isShowModalRename = ref(false);
 // 重命名
 const newName = ref(porps.item.name);
 
-//显示列表背景
+//显示图片
 const handleClickImage = () => {
-  emit('changeListItem', { method: 'image', value: porps.item.data });
+  if (porps.item.type === 'image') emit('changeListItem', { method: 'image', value: porps.item.url });
 };
 </script>
 

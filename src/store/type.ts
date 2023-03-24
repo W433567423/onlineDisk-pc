@@ -13,5 +13,18 @@ interface IUser {
   created_time: string;
   updated_time: string;
 }
+interface IRawlistItem {
+  user_id: number;
+  id: number;
+  file_id: number;
+  isdir: number;
+  size: number;
+  ext: string;
+  md: string;
+  name: string;
+  url: string;
+  created_time: string;
+  updated_time: string;
+}
 
-export type { IUser };
+export type { IUser, IRawlistItem };

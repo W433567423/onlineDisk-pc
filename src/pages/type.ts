@@ -1,7 +1,8 @@
 export interface IListItem {
-  type: string
-  name: string
-  data: string
-  create_time: string
-  checked: boolean
+  type: string;
+  name: string;
+  url: string;
+  created_time: string;
+  id: number;
+  checked: boolean;
 }
