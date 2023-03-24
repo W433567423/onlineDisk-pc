@@ -69,12 +69,9 @@ import { ref, computed, ComputedRef } from 'vue';
 import { useStore } from 'vuex';
 import router from '../router';
 import { Message } from 'view-ui-plus';
-import useCurrentInstancefrom from '../utils/useCurrentInstance';
 import { logout } from '../service/user';
 
 import { IUser } from '../store/type';
-
-const { proxy } = useCurrentInstancefrom();
 
 const store = useStore();
 
