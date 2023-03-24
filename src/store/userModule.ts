@@ -20,6 +20,7 @@ const userModule = {
       state.token = '';
       window.localStorage.removeItem('user');
       window.localStorage.removeItem('token');
+      window.localStorage.removeItem('dirs');
     },
   },
   actions: {
