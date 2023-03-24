@@ -19,4 +19,10 @@ const getFileList = (file_id: number) => {
   return axios.get<File.IDataRows>('/file/list?file_id=' + file_id, { token: true });
 };
 
-export { getFileList };
+// 新建文件夹
+const mkDir = (file_id: number, name: string) => {
+  // 返回的数据格式可以和服务端约定
+  return axios.post('/file/mkdir', { file_id, name, token: true });
+};
+
+export { getFileList, mkDir };

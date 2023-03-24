@@ -40,7 +40,7 @@ class RequestHttp {
      */
     this.service.interceptors.request.use(
       (config: any) => {
-        if (config?.params?.token) {
+        if (config?.params?.token || config?.data?.token) {
           const token = localStorage.getItem('token') || '';
           return {
             ...config,
