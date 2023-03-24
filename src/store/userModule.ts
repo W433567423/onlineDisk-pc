@@ -1,4 +1,3 @@
-import { Message } from 'view-ui-plus';
 import { IUser } from './type';
 const userModule = {
   namespaced: true,
