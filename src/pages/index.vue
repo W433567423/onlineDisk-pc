@@ -67,11 +67,12 @@
 <script setup lang="ts">
 import { ref, computed, ComputedRef } from 'vue';
 import { useStore } from 'vuex';
+import router from '../router';
 import { Message } from 'view-ui-plus';
 import useCurrentInstancefrom from '../utils/useCurrentInstance';
+import { logout } from '../service/user';
 
 import { IUser } from '../store/type';
-import router from '../router';
 
 const { proxy } = useCurrentInstancefrom();
 
@@ -115,11 +116,12 @@ const handleSiderMune = (e: any) => {
   console.log(e);
 };
 const handleClickLogout = () => {
-  proxy.$T.get('/user/logout');
-  Message.success('退出成功');
-  // 清除登录状态和本地存储
-  store.dispatch('usermodule/clearStatus');
-  router.push({ name: 'login' });
+  logout().then((res) => {
+    Message.success(res.data);
+    // 清除登录状态和本地存储
+    store.commit('userModule/clearStatus');
+    router.push({ path: '/login' });
+  });
 };
 </script>
 

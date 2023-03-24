@@ -14,6 +14,13 @@ const userModule = {
     changeToken(state: any, token: string) {
       state.token = token;
     },
+    // 清除登录状态
+    clearStatus(state: any) {
+      state.user = null;
+      state.token = '';
+      window.localStorage.removeItem('user');
+      window.localStorage.removeItem('token');
+    },
   },
   actions: {
     // 用户登录
@@ -23,15 +30,6 @@ const userModule = {
       window.localStorage.setItem('user', JSON.stringify(user));
       window.localStorage.setItem('token', user.token);
     },
-
-    // 清除登录状态
-    clearStatus(context: any) {
-      context.state.user = null;
-      context.state.token = '';
-      window.localStorage.removeItem('user');
-      window.localStorage.removeItem('token');
-    },
-
     // 初始化数据
     initUser(context: any) {
       const user = window.localStorage.getItem('user');

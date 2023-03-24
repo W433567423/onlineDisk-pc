@@ -37,12 +37,11 @@
 import { ref, Ref } from 'vue';
 import { useStore } from 'vuex';
 import { Message } from 'view-ui-plus';
-import useCurrentInstancefrom from '../utils/useCurrentInstance';
 import { useRouter } from 'vue-router';
+import { login, register } from '../service/user';
 
 const router = useRouter();
 const store = useStore();
-const { proxy } = useCurrentInstancefrom();
 
 const formRef: Ref<any> = ref(null);
 const status = ref('login');
@@ -91,32 +90,27 @@ const rules = {
 const handleSubmit = () => {
   formRef.value.validate((valid: boolean) => {
     if (!valid) return;
-    const text = status.value === 'reg' ? '注册成功,请先登录' : '登录成功';
-    proxy.$T
-      .post('/user/' + status.value, formItem.value)
-      .then((res: any) => {
-        if (res?.data?.msg === 'ok') {
-          if (status.value === 'login') {
-            store.dispatch('userModule/userLogin', res?.data?.data);
-            Message.success(text);
-            router.push({ name: 'index' });
-          } else {
-            Message.success(text);
-            status.value = 'login';
-          }
-        }
-      })
-      .catch((err: any | null) => {
-        if (err) Message.error(err?.response?.data?.data);
+    if (status.value === 'login')
+      login(formItem.value)
+        .then((res) => {
+          store.dispatch('userModule/userLogin', res?.data);
+          Message.success('登录成功');
+          router.push({ path: '/wangpan' });
+        })
+        .catch((err) => {
+          if (err.data) Message.error(err?.data);
+        });
+    else {
+      register(formItem.value).then(() => {
+        Message.success('注册成功，请先登录');
+        status.value = 'login';
       });
+    }
   });
 };
 
 // 切换登录/注册
-const changeStatus = () => {
-  status.value = status.value === 'login' ? 'reg' : 'login';
-  console.log(status.value);
-};
+const changeStatus = () => (status.value = status.value === 'login' ? 'reg' : 'login');
 </script>
 
 <style lang="less" scoped>
