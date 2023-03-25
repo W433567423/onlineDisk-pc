@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { IUser } from '../store/type';
 import axios from './';
-namespace Login {
+namespace User {
   // 用户登录表单
   export interface LoginReqForm {
     username: string;
@@ -12,8 +12,6 @@ namespace Login {
     msg: string;
     data: IUser;
   }
-}
-namespace Reg {
   // 用户注册表单
   export interface RegReqForm {
     username: string;
@@ -25,31 +23,36 @@ namespace Reg {
     msg: string;
     data: IUser;
   }
-}
-namespace Logout {
   // 退出登录成功后返回的数据
   export interface LogoutResData {
     msg: string;
     data: string;
   }
+  // 获取容量成功后返回的数据
+  export interface SizeResData {
+    total_size: number;
+    used_size: number;
+  }
 }
 
 // 用户登录
-const login = (params: Login.LoginReqForm) => {
-  // 返回的数据格式可以和服务端约定
-  return axios.post<Login.LoginResData>('/user/login', params);
+const login = (params: User.LoginReqForm) => {
+  return axios.post<User.LoginResData>('/user/login', params);
 };
 
 // 用户登录
-const register = (params: Reg.RegReqForm) => {
-  // 返回的数据格式可以和服务端约定
-  return axios.post<Reg.RegResData>('/user/reg', params);
+const register = (params: User.RegReqForm) => {
+  return axios.post<User.RegResData>('/user/reg', params);
 };
 
 // 用户退出登录
 const logout = () => {
-  // 返回的数据格式可以和服务端约定
-  return axios.get<Logout.LogoutResData>('/user/logout', { token: true });
+  return axios.get<User.LogoutResData>('/user/logout', { token: true });
 };
 
-export { login, register, logout };
+// 用户容量
+const getSize = () => {
+  return axios.get<User.SizeResData>('/user/getSize', { token: true });
+};
+
+export { login, register, logout, getSize };

@@ -38,7 +38,7 @@
     <div style="position: absolute; left: 0; right: 0; bottom: 0px; overflow-y: auto" :style="file_id === 0 ? 'top: 90px' : 'top: 130px'">
       <template v-for="(item, index) in list" :key="index">
         <div class="border-bottom px-3 py-2 media-list">
-          <Row @dblclick="handleClickListItem(item)">
+          <Row @dblclick="handleClickListItem(item)" style="cursor: pointer">
             <iCol span="15" class="d-flex align-items-center">
               <Checkbox
                 class="mb-0 me-3"
@@ -75,6 +75,8 @@
           </Row>
         </div>
       </template>
+
+      <div v-if="list.length === 0" class="text-center text-secondary pt-5 mt-5" style="font-size: 18px; font-weight: 600">暂无数据</div>
     </div>
     <!-- 上传文件 -->
     <Modal
@@ -94,6 +96,7 @@
         }"
         multiple
         type="drag"
+        :onSuccess="Message.success('上传成功')"
         :action="'https://aod.wtututu.top/file/upload?file_id=' + file_id"
       >
         <div style="padding: 20px 0">
@@ -130,6 +133,7 @@ const icons: { [key: string]: any } = {
 };
 const dirs: Ref<Array<IDirs>> = ref(JSON.parse(window.localStorage.getItem('dirs') as string) || [{ id: 0, name: '根目录' }]);
 const uploadModal = ref(false);
+const fileType = ref('all');
 const file_id = computed(() => dirs.value[dirs.value.length - 1].id);
 const token = computed(() => store.state.userModule.token);
 const checkedList = computed(() => list.value.filter((item) => item.checked));
@@ -296,6 +300,11 @@ const handleGoRoot = (id: number) => {
   }
   window.localStorage.setItem('dirs', JSON.stringify(dirs.value));
 };
+
+store.dispatch('fileModule/onUpdateList', (type: any) => {
+  fileType.value = type;
+  getFileList(file_id.value, type).then(({ data }) => (list.value = formatListDate(data?.rows as Array<IRawlistItem>)));
+});
 FlashList();
 </script>
 

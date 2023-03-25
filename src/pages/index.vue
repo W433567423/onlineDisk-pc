@@ -48,16 +48,16 @@
           </Menu>
           <!-- 底部布局 -->
           <div style="width: 200px; height: 55px; background-color: #ebf0f1; position: absolute; bottom: 0" class="px-3">
-            <Progress hide-info :percent="90" :stroke-color="['#108ee9', '#87d068']" />
+            <Progress hide-info :percent="percent" :stroke-color="['#108ee9', '#87d068']" />
             <div class="d-flex justify-content-between mt-2">
-              <span>总共100TB</span>
-              <span class="text-warning">已用80TB</span>
+              <span>{{ toGB(sizeObj.total_size) }}</span>
+              <span class="text-warning">{{ toGB(sizeObj.used_size) }}</span>
             </div>
           </div>
         </Sider>
         <!-- 内容区域 -->
         <Content class="bg-white" style="position: relative">
-          <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; overflow-y: auto"><router-view /></div>
+          <div style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; overflow-y: auto"><router-view ref="wangpanRef" /></div>
         </Content>
       </Layout>
     </Layout>
@@ -65,13 +65,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, ComputedRef } from 'vue';
+import { ref, computed, ComputedRef, Ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import router from '../router';
 import { Message } from 'view-ui-plus';
-import { logout } from '../service/user';
+import { logout, getSize } from '../service/user';
+import { toGB } from '../utils';
 
-import { IUser } from '../store/type';
+import { IUser, ISizeData } from '../store/type';
 
 const store = useStore();
 
@@ -79,28 +80,25 @@ const siderMuneList = [
   {
     category: '全部文件',
     list: [
-      { icon: 'md-image', name: 1, title: '图片' },
-      { icon: 'md-film', name: 2, title: '视频' },
-      { icon: 'md-musical-notes', name: 3, title: '音乐' },
-      { icon: 'md-document', name: 4, title: '其他' },
-    ],
-  },
-  {
-    category: '其他操作',
-    list: [
-      { icon: 'md-share', name: 5, title: '我的分享' },
-      { icon: 'md-trash', name: 6, title: '回收站' },
+      { icon: 'md-document', name: 'all', title: '全部文件' },
+      { icon: 'md-image', name: 'image', title: '图片' },
+      { icon: 'md-film', name: 'video', title: '视频' },
     ],
   },
 ];
 const topMuneList = [
   { icon: 'md-cloud', name: 1, title: '网盘' },
   { icon: 'md-share', name: 2, title: '分享' },
-  { icon: 'md-keypad', name: 3, title: '更多' },
+  // { icon: 'md-keypad', name: 3, title: '更多' },
 ];
 const topMuneIndex = ref(1);
+const wangpanRef = ref();
 const siderMuneIndex = ref(2);
-
+const sizeObj: Ref<ISizeData> = ref({ total_size: 0, used_size: 0 });
+const percent = computed(() => {
+  if (sizeObj.value.total_size !== 0) return (sizeObj.value.used_size / sizeObj.value.total_size) * 100;
+  return 0;
+});
 const user: ComputedRef<IUser> = computed(() => store.state.userModule.user || {});
 
 // 处理顶部点击事件
@@ -109,9 +107,10 @@ const handleTopMune = (e: any) => {
 };
 
 // 处理侧边点击事件
-const handleSiderMune = (e: any) => {
-  console.log(e);
+const handleSiderMune = (e: string) => {
+  store.dispatch('fileModule/updateList', e);
 };
+// 退出登录
 const handleClickLogout = () => {
   logout().then((res) => {
     Message.success(res.data);
@@ -120,6 +119,15 @@ const handleClickLogout = () => {
     router.push({ path: '/login' });
   });
 };
+
+// 获取容量信息
+const HandleSize = () => {
+  getSize().then(({ data }) => {
+    sizeObj.value = data as ISizeData;
+    store.commit('userModule/changeSize', data);
+  });
+};
+HandleSize();
 </script>
 
 <style lang="less">

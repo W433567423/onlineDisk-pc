@@ -26,5 +26,8 @@ interface IRawlistItem {
   created_time: string;
   updated_time: string;
 }
-
-export type { IUser, IRawlistItem };
+interface ISizeData {
+  total_size: number;
+  used_size: number;
+}
+export type { IUser, IRawlistItem, ISizeData };

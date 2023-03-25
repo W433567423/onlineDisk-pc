@@ -1,9 +1,18 @@
 const fileModule = {
   namespaced: true,
   state() {
-    return {};
+    return {
+      onUpdateListFn: null,
+    };
   },
   mutations: {},
-  actions: {},
+  actions: {
+    onUpdateList({ state }: any, cb: any) {
+      state.onUpdateListFn = cb;
+    },
+    updateList({ state }: any, params: any) {
+      if (state.onUpdateListFn && typeof state.onUpdateListFn === 'function') state.onUpdateListFn(params);
+    },
+  },
 };
 export default fileModule;

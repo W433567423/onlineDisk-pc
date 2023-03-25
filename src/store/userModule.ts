@@ -1,4 +1,4 @@
-import { IUser } from './type';
+import { IUser, ISizeData } from './type';
 const userModule = {
   namespaced: true,
   state() {
@@ -13,6 +13,10 @@ const userModule = {
     },
     changeToken(state: any, token: string) {
       state.token = token;
+    },
+    changeSize(state: any, size: ISizeData) {
+      state.user.used_size = size.used_size;
+      state.user.total_size = size.total_size;
     },
     // 清除登录状态
     clearStatus(state: any) {

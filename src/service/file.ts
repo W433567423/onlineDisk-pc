@@ -19,9 +19,9 @@ namespace File {
 }
 
 // 获取文件列表
-const getFileList = (file_id: number) => {
+const getFileList = (file_id: number, type?: string) => {
   // 返回的数据格式可以和服务端约定
-  return axios.get<File.IDataRows>('/file/list?file_id=' + file_id, { token: true });
+  return axios.get<File.IDataRows>('/file/list?file_id=' + file_id, { type, token: true });
 };
 
 // 新建文件夹
@@ -34,7 +34,7 @@ const renameFile = (file_id: number, id: number, name: string) => {
   return axios.post('/file/rename', { file_id, name, id, token: true });
 };
 
-// 重命名
+// 删除文件
 const deleteFile = (ids: string) => {
   return axios.post('/file/delete', { ids, token: true });
 };
